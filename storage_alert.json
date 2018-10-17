@@ -1,0 +1,62 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "alertName": {
+            "defaultValue": "Alert : Storage Availability less than 100",
+            "type": "string"
+        },
+        "storageAccountName": {
+            "type": "string"
+        },
+        "actionGroupName": {
+            "type": "string"
+        },
+        "actionGroupRG": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+          {
+            "type": "Microsoft.Insights/metricAlerts",
+            "name":  "[parameters('alertName')]",
+            "apiVersion": "2018-03-01",
+            "location": "global",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "description": "Storage Availability less than 100",
+                "severity": 3,
+                "enabled": true,
+                "scopes": [
+                    "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                      ],
+                "evaluationFrequency": "PT1M",
+                "windowSize": "PT5M",
+                "criteria": {
+                    "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                    "allOf": [
+                        {
+                            "name" : "1st criterion",
+                            "metricName": "Availability",
+                            "dimensions":[],
+                            "operator": "LessThan",
+                            "threshold" : 100,
+                            "timeAggregation": "Average"
+                        }
+                    ]
+                },
+                "actions": [
+                    {
+                        "actionGroupId": "[resourceId(parameters('actionGroupRG'),'microsoft.insights/actionGroups', parameters('actionGroupName'))]",
+                        "webHookProperties": {}
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ]
+        }
+    ]
+}
