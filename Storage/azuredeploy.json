@@ -53,10 +53,7 @@
                         "webHookProperties": {}
                     }
                 ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ]
+            }
         }
     ]
 }
