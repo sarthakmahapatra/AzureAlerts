@@ -3,7 +3,7 @@ Templates to create Alerts on Azure
 
 ---
 
-## Storage Alert
+## Storage Alerts
 
 Storage Availability less than 100%
 
